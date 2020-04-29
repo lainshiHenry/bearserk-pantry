@@ -1,3 +1,4 @@
+import 'package:bearserkpantry/utilities/app_drawer.dart';
 import 'package:flutter/material.dart';
 
 class CategoryPage extends StatefulWidget {
@@ -9,6 +10,11 @@ class CategoryPage extends StatefulWidget {
 class _CategoryPageState extends State<CategoryPage> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Category Page'),
+      ),
+      drawer: AppDrawer(),
+    );
   }
 }

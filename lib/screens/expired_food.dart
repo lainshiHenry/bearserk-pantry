@@ -1,3 +1,4 @@
+import 'package:bearserkpantry/utilities/app_drawer.dart';
 import 'package:flutter/material.dart';
 
 class ExpiredFood extends StatefulWidget {
@@ -9,6 +10,13 @@ class ExpiredFood extends StatefulWidget {
 class _ExpiredFoodState extends State<ExpiredFood> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'Expired Food',
+        ),
+      ),
+      drawer: AppDrawer(),
+    );
   }
 }

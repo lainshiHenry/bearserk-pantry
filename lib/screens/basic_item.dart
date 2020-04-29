@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:bearserkpantry/utilities/app_drawer.dart';
 
 class BasicItem extends StatefulWidget {
   static String id = 'basic_item';
@@ -9,6 +10,13 @@ class BasicItem extends StatefulWidget {
 class _BasicItemState extends State<BasicItem> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'Basic Items',
+        ),
+      ),
+      drawer: AppDrawer(),
+    );
   }
 }
