@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:bearserkpantry/utilities/constants.dart';
 import 'package:bearserkpantry/utilities/app_drawer.dart';
+import 'package:bearserkpantry/utilities/list_item.dart';
 
 class AllItems extends StatefulWidget {
   static String id = 'all_items';
@@ -16,20 +18,43 @@ class _AllItemsState extends State<AllItems> {
         title: Text(kAppTitle),
       ),
       drawer: AppDrawer(),
-      body: ListView(
-        children: <Widget>[
-          ListTile(
-            title: Text('Egg'),
-            subtitle: Text('Expire: 2020-05-01'),
-            isThreeLine: true,
-            trailing: Column(
+      body: SafeArea(
+        child: Column(
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                Text('Fridge'),
-                Text('30'),
+                RaisedButton(
+                  onPressed: () {},
+                  child: Text('Add'),
+                ),
+                RaisedButton(
+                  onPressed: () {},
+                  child: Text('Delete'),
+                ),
               ],
             ),
-          ),
-        ],
+            Expanded(
+              child: ListView(
+                children: <Widget>[
+                  ListItem(),
+                  ListItem(),
+                  ListItem(),
+                  ListItem(),
+                  ListItem(),
+                  ListItem(),
+                  ListItem(),
+                  ListItem(),
+                  ListItem(),
+                  ListItem(),
+                  ListItem(),
+                  ListItem(),
+                  ListItem(),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
