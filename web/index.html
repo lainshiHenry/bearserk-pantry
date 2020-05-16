@@ -18,9 +18,36 @@
   <link rel="manifest" href="manifest.json">
 </head>
 <body>
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/7.14.4/firebase-app.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="https://www.gstatic.com/firebasejs/7.14.4/firebase-analytics.js"></script>
+<!-- Add Firebase products that you want to use -->
+<script src="https://www.gstatic.com/firebasejs/7.14.4/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.14.4/firebase-firestore.js"></script>
+
+<script>
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyDYDBvHJVTgAZ5jwPuc7qz12zrUpW4UubE",
+    authDomain: "bearserk-pantry.firebaseapp.com",
+    databaseURL: "https://bearserk-pantry.firebaseio.com",
+    projectId: "bearserk-pantry",
+    storageBucket: "bearserk-pantry.appspot.com",
+    messagingSenderId: "480570359559",
+    appId: "1:480570359559:web:a9690adf18fb804edc0fa2",
+    measurementId: "G-KCRN6P6V5G"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+</script>
   <!-- This script installs service_worker.js to provide PWA functionality to
        application. For more information, see:
        https://developers.google.com/web/fundamentals/primers/service-workers -->
+
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function () {

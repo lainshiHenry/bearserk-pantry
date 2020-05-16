@@ -15,7 +15,10 @@ class _AllItemsState extends State<AllItems> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(kAppTitle),
+        centerTitle: true,
+        title: Text(
+          kAppTitle,
+        ),
       ),
       drawer: AppDrawer(),
       body: SafeArea(
@@ -37,19 +40,10 @@ class _AllItemsState extends State<AllItems> {
             Expanded(
               child: ListView(
                 children: <Widget>[
-                  ListItem(),
-                  ListItem(),
-                  ListItem(),
-                  ListItem(),
-                  ListItem(),
-                  ListItem(),
-                  ListItem(),
-                  ListItem(),
-                  ListItem(),
-                  ListItem(),
-                  ListItem(),
-                  ListItem(),
-                  ListItem(),
+                  ListItem(
+                    itemName: 'Egg',
+                    quantity: '30',
+                  ),
                 ],
               ),
             ),

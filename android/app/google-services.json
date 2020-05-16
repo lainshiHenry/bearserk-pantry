@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "480570359559",
+    "firebase_url": "https://bearserk-pantry.firebaseio.com",
+    "project_id": "bearserk-pantry",
+    "storage_bucket": "bearserk-pantry.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:480570359559:android:5fdb5b3ac5c4fa45dc0fa2",
+        "android_client_info": {
+          "package_name": "ca.henryle.bearserkpantry"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "480570359559-c2jh40td5q92ciq2jf2gsr5qp748ti03.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA0kbUXy4yx_6rwtHJpSn6UCJw6vi1qqxk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "480570359559-c2jh40td5q92ciq2jf2gsr5qp748ti03.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

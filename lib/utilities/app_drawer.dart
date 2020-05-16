@@ -1,3 +1,4 @@
+import 'package:bearserkpantry/screens/unit_converter.dart';
 import 'package:flutter/material.dart';
 import 'constants.dart';
 import 'package:bearserkpantry/screens/all_items.dart';
@@ -17,7 +18,7 @@ class AppDrawer extends StatelessWidget {
           DrawerHeader(
             child: Text(kAppTitle),
             decoration: BoxDecoration(
-              color: Colors.orange,
+              color: kPrimaryAppColour,
             ),
           ),
           NavigationItem(
@@ -53,6 +54,10 @@ class AppDrawer extends StatelessWidget {
             navItemName: 'Expiring Food',
             destination: ExpiringFood.id,
             leftIcon: Icons.alarm,
+          ),
+          NavigationItem(
+            navItemName: 'Unit Converter',
+            destination: UnitConverter.id,
           ),
         ],
       ),
