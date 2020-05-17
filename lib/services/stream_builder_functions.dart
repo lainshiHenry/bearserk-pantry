@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:bearserkpantry/utilities/list_item.dart';
+import 'package:bearserkpantry/utilities/dismissible_list_item.dart';
 
 final _firestoreInstance = Firestore.instance;
 
@@ -52,65 +52,23 @@ Widget getShoppingListStream() {
       });
 }
 
-class DismissibleListItem extends StatefulWidget {
-  final String itemName;
-  final int quantity;
-
-  DismissibleListItem({@required this.itemName, this.quantity});
-
-  @override
-  _DismissibleListItemState createState() => _DismissibleListItemState();
-}
-
-class _DismissibleListItemState extends State<DismissibleListItem> {
-  @override
-  Widget build(BuildContext context) {
-    return Dismissible(
-      background: Container(
-        color: Colors.red,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Icon(Icons.delete),
-          ],
-        ),
-      ),
-      secondaryBackground: Container(
-        color: Colors.green,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            Icon(Icons.check),
-          ],
-        ),
-      ),
-      key: Key(widget.itemName),
-      child: ListItem(
-        itemName: widget.itemName,
-        quantity: widget.quantity.toString(),
-      ),
-      onDismissed: (direction) {
-        setState(() async {
-          try {
-            await _firestoreInstance
-                .collection('pantry')
-                .document('pantry')
-                .collection('shoppingList')
-                .document('${widget.itemName}')
-                .setData({
-              'itemName': '${widget.itemName}',
-              'quantity': (widget.quantity - 1),
-            }, merge: true);
-          } catch (e) {
-            print(e);
-          }
-        });
-      },
-    );
+void addShoppingListItem(String itemName, int quantity) async {
+  try {
+    await _firestoreInstance
+        .collection('pantry')
+        .document('pantry')
+        .collection('shoppingList')
+        .document('${itemName.toLowerCase()}')
+        .setData({
+      'itemName': '${itemName.toLowerCase()}',
+      'quantity': quantity,
+    }, merge: true);
+  } catch (e) {
+    print(e);
   }
 }
 
-void addShoppingListItem(String itemName, int quantity) async {
+Future<void> purchaseItem({String itemName, int quantity}) async {
   try {
     await _firestoreInstance
         .collection('pantry')
@@ -119,9 +77,33 @@ void addShoppingListItem(String itemName, int quantity) async {
         .document('$itemName')
         .setData({
       'itemName': '$itemName',
+      'quantity': (quantity - 1),
+    }, merge: true);
+
+    addToPurchaseHistory(
+      itemName: itemName,
+      quantity: quantity,
+    );
+  } catch (e) {
+    print(e);
+  }
+}
+
+void addToPurchaseHistory({String itemName, int quantity}) async {
+  String currentTimestamp = DateTime.now().millisecondsSinceEpoch.toString();
+  try {
+    await _firestoreInstance
+        .collection('pantry')
+        .document('pantry')
+        .collection('purchaseHistory')
+        .document('$currentTimestamp')
+        .setData({
+      'itemName': '$itemName',
       'quantity': quantity,
     }, merge: true);
   } catch (e) {
     print(e);
   }
 }
+
+void addToPantry({String itemName, int quantity}) {}
