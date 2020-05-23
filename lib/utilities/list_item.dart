@@ -15,15 +15,28 @@ class ListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text('$itemName'),
+      title: Text(
+        '$itemName',
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           expireDate == null ? Text('') : Text('Expire: $expireDate'),
-          storageLocation == null ? Text('') : Text('$storageLocation'),
+          storageLocation == null
+              ? Text('')
+              : Text('Location: $storageLocation'),
         ],
       ),
-      trailing: quantity == null ? null : Text('$quantity'),
+      trailing: quantity == null
+          ? null
+          : Text(
+              '$quantity',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20.0,
+              ),
+            ),
     );
   }
 }

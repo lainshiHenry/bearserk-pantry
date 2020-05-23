@@ -4,3 +4,7 @@ import 'package:flutter/material.dart';
 Widget buildShoppingList() {
   return getShoppingListStream();
 }
+
+Widget buildPantryList() {
+  return getPantryStream();
+}
