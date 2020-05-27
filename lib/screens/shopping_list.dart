@@ -1,4 +1,5 @@
 import 'package:bearserkpantry/services/stream_builder_functions.dart';
+import 'package:bearserkpantry/utilities/bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:bearserkpantry/utilities/app_drawer.dart';
 import 'package:bearserkpantry/services/build_list.dart';
@@ -13,14 +14,17 @@ class ShoppingList extends StatefulWidget {
 class _ShoppingListState extends State<ShoppingList> {
   String _addItemName;
   int _addItemQuantity = 1;
+  String _addItemStoreName;
   final _itemNameEditingController = TextEditingController();
   final _itemQtyEditingController = TextEditingController(text: '1');
+  final _itemStoreNameEditingController = TextEditingController();
 
   @override
   void dispose() {
     // TODO: implement dispose
     _itemNameEditingController.dispose();
     _itemQtyEditingController.dispose();
+    _itemStoreNameEditingController.dispose();
     super.dispose();
   }
 
@@ -33,6 +37,7 @@ class _ShoppingListState extends State<ShoppingList> {
         ),
       ),
       drawer: AppDrawer(),
+      bottomNavigationBar: BottomNavBar(),
       body: Container(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -63,13 +68,25 @@ class _ShoppingListState extends State<ShoppingList> {
                       controller: _itemQtyEditingController,
                     ),
                   ),
+                  Expanded(
+                    child: TextField(
+                      decoration:
+                          kTextFieldDecoration.copyWith(hintText: 'Store'),
+                      onChanged: (value) {
+                        _addItemStoreName = value;
+                      },
+                    ),
+                  ),
                   RaisedButton(
-                    child: Text('Add Item'),
+                    child: Icon(Icons.add),
                     onPressed: () {
                       try {
-                        addShoppingListItem(_addItemName, _addItemQuantity);
+                        addShoppingListItem(
+                            _addItemName, _addItemQuantity, _addItemStoreName);
                         _itemNameEditingController.clear();
+                        _itemQtyEditingController.clear();
                         _itemQtyEditingController.text = '1';
+                        _itemStoreNameEditingController.clear();
                       } catch (e) {
                         print(e);
                       }

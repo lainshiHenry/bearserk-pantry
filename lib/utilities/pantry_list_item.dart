@@ -1,32 +1,27 @@
 import 'package:bearserkpantry/utilities/list_item.dart';
-import 'package:strings/strings.dart';
 import 'package:flutter/material.dart';
+import 'package:strings/strings.dart';
 
-class PantryListItem extends StatefulWidget {
+class PantryListItem extends StatelessWidget {
+  static String id = 'pantry_list_item';
   final String itemName;
   final int quantity;
+  final String expireDate;
   final String storageLocation;
 
   PantryListItem(
-      {@required this.itemName, this.quantity, this.storageLocation});
-  @override
-  _PantryListItemState createState() => _PantryListItemState();
-}
+      {@required this.itemName,
+      @required this.quantity,
+      this.expireDate,
+      this.storageLocation});
 
-class _PantryListItemState extends State<PantryListItem> {
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {},
-      child: Dismissible(
-        key: Key(widget.itemName),
-        child: ListItem(
-          itemName: capitalize(widget.itemName),
-          quantity: widget.quantity.toString(),
-          storageLocation: capitalize(widget.storageLocation),
-        ),
-        onDismissed: (direction) {},
-      ),
+    return ListItem(
+      itemName: capitalize(itemName),
+      quantity: quantity.toString(),
+      column1Row1Heading: 'Location: ',
+      column1Row1Body: capitalize(storageLocation),
     );
   }
 }

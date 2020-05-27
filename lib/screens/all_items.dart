@@ -1,10 +1,11 @@
+import 'package:bearserkpantry/screens/add_pantry_Item.dart';
 import 'package:bearserkpantry/services/add_via_barcode.dart';
 import 'package:bearserkpantry/services/build_list.dart';
+import 'package:bearserkpantry/utilities/bottom_nav_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:bearserkpantry/utilities/constants.dart';
 import 'package:bearserkpantry/utilities/app_drawer.dart';
-import 'package:bearserkpantry/utilities/list_item.dart';
 import 'dart:math';
 
 class AllItems extends StatefulWidget {
@@ -24,6 +25,7 @@ class _AllItemsState extends State<AllItems> {
         ),
       ),
       drawer: AppDrawer(),
+      bottomNavigationBar: BottomNavBar(),
       body: SafeArea(
         child: Column(
           children: <Widget>[
@@ -31,21 +33,15 @@ class _AllItemsState extends State<AllItems> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 RaisedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    addViaBarcode = false;
+                    Navigator.pushNamed(context, AddPantryItem.id);
+                  },
                   child: Text('Add'),
                 ),
                 RaisedButton(
                   onPressed: () {},
                   child: Text('Delete'),
-                ),
-                RaisedButton(
-                  onPressed: () {
-                    runBarcodeScan();
-                  },
-                  child: Transform.rotate(
-                    child: Icon(Icons.format_align_justify),
-                    angle: pi / 2,
-                  ),
                 ),
               ],
             ),

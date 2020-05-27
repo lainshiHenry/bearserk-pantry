@@ -7,8 +7,9 @@ import 'dart:async';
 class DismissibleListItem extends StatefulWidget {
   final String itemName;
   final int quantity;
+  final String storeName;
 
-  DismissibleListItem({@required this.itemName, this.quantity});
+  DismissibleListItem({@required this.itemName, this.quantity, this.storeName});
 
   @override
   _DismissibleListItemState createState() => _DismissibleListItemState();
@@ -40,6 +41,8 @@ class _DismissibleListItemState extends State<DismissibleListItem> {
       child: ListItem(
         itemName: capitalize(widget.itemName),
         quantity: widget.quantity.toString(),
+        column2Row1Heading: 'Store',
+        column2Row1Body: widget.storeName,
       ),
       onDismissed: (direction) async {
         setState(() async {
