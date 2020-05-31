@@ -1,24 +1,4 @@
-import 'package:flutter/material.dart';
 import 'package:barcode_scan/barcode_scan.dart';
-
-class AddViaBarcode extends StatefulWidget {
-  static String id = 'add_via_barcode';
-  @override
-  _AddViaBarcodeState createState() => _AddViaBarcodeState();
-}
-
-class _AddViaBarcodeState extends State<AddViaBarcode> {
-  //ScanResult scanResult;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: RaisedButton(onPressed: () {
-        runBarcodeScan();
-      }),
-    );
-  }
-}
 
 Future<String> runBarcodeScan() async {
   var barcodeOptions =

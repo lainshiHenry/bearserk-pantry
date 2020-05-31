@@ -6,8 +6,6 @@ import 'package:bearserkpantry/services/stream_builder_functions.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 
-bool addViaBarcode = false;
-
 class AddPantryItem extends StatefulWidget {
   static String id = 'add_pantry_item';
 
@@ -28,14 +26,6 @@ class _AddPantryItemState extends State<AddPantryItem> {
     setState(() {
       _itemBarcodeTextEditingController.text = _itemBarcodeStr;
     });
-  }
-
-  @override
-  void initState() {
-    if (addViaBarcode) {
-      runBCScan();
-    }
-    super.initState();
   }
 
   @override

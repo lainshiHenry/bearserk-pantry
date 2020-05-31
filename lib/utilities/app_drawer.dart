@@ -1,3 +1,4 @@
+import 'package:bearserkpantry/screens/add_product_database.dart';
 import 'package:bearserkpantry/screens/unit_converter.dart';
 import 'package:flutter/material.dart';
 import 'constants.dart';
@@ -58,6 +59,11 @@ class AppDrawer extends StatelessWidget {
           NavigationItem(
             navItemName: 'Unit Converter',
             destination: UnitConverter.id,
+          ),
+          NavigationItem(
+            navItemName: 'Add To Product DB',
+            destination: AddProductDatabase.id,
+            leftIcon: Icons.sd_storage,
           ),
         ],
       ),

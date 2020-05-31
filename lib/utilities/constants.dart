@@ -18,3 +18,8 @@ const kTextFieldDecoration = InputDecoration(
     borderRadius: BorderRadius.all(Radius.circular(32.0)),
   ),
 );
+
+const kErrorMessageTextDecoration = TextStyle(
+  color: Colors.red,
+  fontWeight: FontWeight.bold,
+);

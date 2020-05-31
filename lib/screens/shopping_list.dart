@@ -21,7 +21,6 @@ class _ShoppingListState extends State<ShoppingList> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     _itemNameEditingController.dispose();
     _itemQtyEditingController.dispose();
     _itemStoreNameEditingController.dispose();

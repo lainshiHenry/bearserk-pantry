@@ -1,3 +1,4 @@
+import 'package:bearserkpantry/services/stream_data.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:bearserkpantry/utilities/dismissible_list_item.dart';
@@ -36,6 +37,7 @@ Widget getPantryStream() {
           );
           pantryListStream.add(pListItem);
         }
+        userPantryListStream = pantryListStream;
         return ListView.separated(
           itemCount: pantryListStream.length,
           separatorBuilder: (BuildContext context, int index) => const Divider(
@@ -60,8 +62,6 @@ Widget getShoppingListStream() {
           .collection('pantry')
           .document('$pantryID')
           .collection('shoppingList')
-          .where('quantity', isGreaterThan: 0)
-          .orderBy('quantity', descending: false)
           .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
@@ -85,6 +85,7 @@ Widget getShoppingListStream() {
 
           shoppingListStream.add(sListItem);
         }
+        userShoppingListStream = shoppingListStream;
 
         return Container(
           child: ListView.separated(
@@ -171,7 +172,7 @@ void addToPurchaseHistory({String itemName, int quantity}) async {
         .collection('purchaseHistory')
         .document('$currentTimestamp')
         .setData({
-      'itemName': '$itemName',
+      'itemName': '${itemName.toLowerCase()}',
       'quantity': quantity,
     }, merge: true);
   } catch (e) {
@@ -190,9 +191,43 @@ void addToPantry(
       .collection('pantry')
       .document('$itemName')
       .setData({
-    'itemName': '$itemName',
+    'itemName': '${itemName.toLowerCase()}',
     'quantity': quantity,
-    'storageLocation': '$storageLocation',
+    'storageLocation': '${storageLocation.toLowerCase()}',
     'barcode': '$barcode',
   }, merge: true);
+
+  /* if (barcode != null) {
+    addToProductDB(
+      barcode: barcode,
+      productName: itemName,
+    );
+  }*/
+}
+
+Future<String> addToProductDB(
+    {String barcode,
+    String productName,
+    String productBrand,
+    int productQuantity,
+    String quantityUnit}) async {
+  String _errorMsg;
+
+  try {
+    await _firestoreInstance
+        .collection('productDB')
+        .document('$barcode')
+        .setData({
+      'barcode': '$barcode',
+      'productName': '${productName.toLowerCase()}',
+      'productBrand': '${productBrand.toLowerCase()}',
+      'productQuantity': productQuantity,
+      'quantityUnit': '${quantityUnit.toLowerCase()}',
+    }, merge: true);
+    _errorMsg = null;
+  } catch (e) {
+    print(e);
+    _errorMsg = e.message.toString();
+  }
+  return _errorMsg;
 }

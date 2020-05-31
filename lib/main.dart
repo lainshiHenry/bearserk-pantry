@@ -1,4 +1,5 @@
 import 'package:bearserkpantry/screens/add_pantry_Item.dart';
+import 'package:bearserkpantry/screens/add_product_database.dart';
 import 'package:bearserkpantry/screens/unit_converter.dart';
 import 'package:bearserkpantry/services/add_via_barcode.dart';
 import 'package:bearserkpantry/utilities/constants.dart';
@@ -34,8 +35,8 @@ class MyApp extends StatelessWidget {
         ShoppingList.id: (context) => ShoppingList(),
         StorageArea.id: (context) => StorageArea(),
         UnitConverter.id: (context) => UnitConverter(),
-        AddViaBarcode.id: (context) => AddViaBarcode(),
         AddPantryItem.id: (context) => AddPantryItem(),
+        AddProductDatabase.id: (context) => AddProductDatabase(),
       },
     );
   }
