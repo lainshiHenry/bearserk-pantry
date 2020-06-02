@@ -69,6 +69,7 @@ class _ShoppingListState extends State<ShoppingList> {
                   ),
                   Expanded(
                     child: TextField(
+                      controller: _itemStoreNameEditingController,
                       decoration:
                           kTextFieldDecoration.copyWith(hintText: 'Store'),
                       onChanged: (value) {
@@ -81,7 +82,10 @@ class _ShoppingListState extends State<ShoppingList> {
                     onPressed: () {
                       try {
                         addShoppingListItem(
-                            _addItemName, _addItemQuantity, _addItemStoreName);
+                          itemName: _addItemName,
+                          quantity: _addItemQuantity,
+                          storeName: _addItemStoreName,
+                        );
                         _itemNameEditingController.clear();
                         _itemQtyEditingController.clear();
                         _itemQtyEditingController.text = '1';

@@ -1,3 +1,5 @@
+import 'package:bearserkpantry/utilities/arguments/edit_pantry_item_arguments.dart';
+import 'package:bearserkpantry/screens/shopping_list_item_details.dart';
 import 'package:flutter/material.dart';
 import 'package:bearserkpantry/utilities/list_item.dart';
 import 'package:bearserkpantry/services/stream_builder_functions.dart';
@@ -41,8 +43,13 @@ class _DismissibleListItemState extends State<DismissibleListItem> {
       child: ListItem(
         itemName: capitalize(widget.itemName),
         quantity: widget.quantity.toString(),
-        column2Row1Heading: 'Store',
-        column2Row1Body: widget.storeName,
+        purchaseStoreName: widget.storeName,
+        destinationRouteName: ShoppingListItemDetails.id,
+        destinationArguments: ItemArgs(
+          productName: widget.itemName,
+          itemQuantity: widget.quantity,
+          purchaseStoreName: widget.storeName,
+        ),
       ),
       onDismissed: (direction) async {
         setState(() async {

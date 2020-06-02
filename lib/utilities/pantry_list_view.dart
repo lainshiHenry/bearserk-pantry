@@ -5,9 +5,13 @@ class PantryListView extends StatefulWidget {
   final String itemName;
   final int quantity;
   final String storageLocation;
+  final String expireDate;
 
   PantryListView(
-      {@required this.itemName, this.quantity, this.storageLocation});
+      {@required this.itemName,
+      this.quantity,
+      this.expireDate,
+      this.storageLocation});
   @override
   _PantryListViewState createState() => _PantryListViewState();
 }

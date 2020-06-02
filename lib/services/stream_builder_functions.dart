@@ -2,7 +2,7 @@ import 'package:bearserkpantry/services/stream_data.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:bearserkpantry/utilities/dismissible_list_item.dart';
-import 'package:bearserkpantry/utilities/pantry_list_view.dart';
+import 'package:bearserkpantry/utilities/pantry_list_item.dart';
 import 'package:bearserkpantry/utilities/dev_constants.dart';
 
 final _firestoreInstance = Firestore.instance;
@@ -23,14 +23,14 @@ Widget getPantryStream() {
           );
         }
         final pantryList = snapshot.data.documents;
-        List<PantryListView> pantryListStream = [];
+        List<PantryListItem> pantryListStream = [];
 
         for (var pantryListItem in pantryList) {
           final String itemName = pantryListItem.data['itemName'];
           final int quantity = pantryListItem.data['quantity'];
           final String storageLocation = pantryListItem.data['storageLocation'];
 
-          final pListItem = PantryListView(
+          final pListItem = PantryListItem(
             itemName: itemName,
             quantity: quantity,
             storageLocation: storageLocation,
@@ -109,7 +109,7 @@ Widget getShoppingListStream() {
 }
 
 void addShoppingListItem(
-    String itemName, int quantity, String storeName) async {
+    {String itemName, int quantity, String storeName}) async {
   try {
     await _firestoreInstance
         .collection('pantry')

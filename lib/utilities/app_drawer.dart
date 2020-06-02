@@ -32,29 +32,9 @@ class AppDrawer extends StatelessWidget {
             leftIcon: Icons.category,
           ),
           NavigationItem(
-            navItemName: 'Storage Area',
-            destination: StorageArea.id,
-            leftIcon: Icons.storage,
-          ),
-          NavigationItem(
-            navItemName: 'Expired Items',
-            destination: ExpiredFood.id,
-            leftIcon: Icons.delete,
-          ),
-          NavigationItem(
             navItemName: 'Shopping List',
             destination: ShoppingList.id,
             leftIcon: Icons.shopping_cart,
-          ),
-          NavigationItem(
-            navItemName: 'Basic Items',
-            destination: BasicItem.id,
-            leftIcon: Icons.fastfood,
-          ),
-          NavigationItem(
-            navItemName: 'Expiring Food',
-            destination: ExpiringFood.id,
-            leftIcon: Icons.alarm,
           ),
           NavigationItem(
             navItemName: 'Unit Converter',
@@ -90,3 +70,27 @@ class NavigationItem extends StatelessWidget {
     );
   }
 }
+
+/*            NavigationItem(
+            navItemName: 'Storage Area',
+            destination: StorageArea.id,
+            leftIcon: Icons.storage,
+          ),
+          NavigationItem(
+            navItemName: 'Expired Items',
+            destination: ExpiredFood.id,
+            leftIcon: Icons.delete,
+          ),
+NavigationItem(
+
+            navItemName: 'Basic Items',
+            destination: BasicItem.id,
+            leftIcon: Icons.fastfood,
+          ),
+          NavigationItem(
+            navItemName: 'Expiring Food',
+            destination: ExpiringFood.id,
+            leftIcon: Icons.alarm,
+          ),
+
+ */

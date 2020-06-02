@@ -1,6 +1,8 @@
+import 'package:bearserkpantry/utilities/arguments/edit_pantry_item_arguments.dart';
 import 'package:bearserkpantry/utilities/list_item.dart';
 import 'package:flutter/material.dart';
 import 'package:strings/strings.dart';
+import 'package:bearserkpantry/screens/pantry_item_details.dart';
 
 class PantryListItem extends StatelessWidget {
   static String id = 'pantry_list_item';
@@ -20,8 +22,12 @@ class PantryListItem extends StatelessWidget {
     return ListItem(
       itemName: capitalize(itemName),
       quantity: quantity.toString(),
-      column1Row1Heading: 'Location: ',
-      column1Row1Body: capitalize(storageLocation),
+      storageLocation: capitalize(storageLocation),
+      destinationRouteName: PantryItemDetails.id,
+      destinationArguments: ItemArgs(
+          productName: itemName,
+          itemQuantity: quantity,
+          storageLocation: storageLocation),
     );
   }
 }

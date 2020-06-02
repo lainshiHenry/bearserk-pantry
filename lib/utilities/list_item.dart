@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:bearserkpantry/utilities/constants.dart';
 
 class ListItem extends StatelessWidget {
   final String itemName;
@@ -6,6 +7,7 @@ class ListItem extends StatelessWidget {
   final String expireDate;
   final String storageLocation;
   final String mainTitle;
+  final String purchaseStoreName;
   final String column1Row1Heading;
   final String column1Row1Body;
   final String column1Row2Heading;
@@ -15,19 +17,17 @@ class ListItem extends StatelessWidget {
   final String column2Row2Heading;
   final String column2Row2Body;
   final String trailingItem;
-  final Function increaseQty;
-  final Function decreaseQty;
+  final String destinationRouteName;
+  final Object destinationArguments;
   final Function moveItem;
-  final Function onTapFunction;
 
   ListItem(
       {@required this.itemName,
       this.quantity,
       this.expireDate,
       this.storageLocation,
-      this.increaseQty,
-      this.decreaseQty,
       this.moveItem,
+      this.purchaseStoreName,
       this.mainTitle,
       this.column1Row1Heading,
       this.column1Row1Body,
@@ -38,7 +38,8 @@ class ListItem extends StatelessWidget {
       this.column2Row2Heading,
       this.column2Row2Body,
       this.trailingItem,
-      this.onTapFunction});
+      this.destinationRouteName,
+      this.destinationArguments});
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +49,10 @@ class ListItem extends StatelessWidget {
         '$itemName',
         style: TextStyle(fontWeight: FontWeight.bold),
       ),
-      onTap: () {},
+      onTap: () {
+        Navigator.pushNamed(context, destinationRouteName,
+            arguments: destinationArguments);
+      },
       subtitle: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
@@ -62,12 +66,9 @@ class ListItem extends StatelessWidget {
                 expireDate == null
                     ? SizedBox(height: 0)
                     : Text('Expire: $expireDate'),
-                column1Row1Body == null
+                purchaseStoreName == null
                     ? SizedBox(height: 0)
-                    : Text('$column1Row1Heading: $column1Row1Body'),
-                column1Row2Body == null
-                    ? SizedBox(height: 0)
-                    : Text('$column1Row2Heading: $column1Row2Body'),
+                    : Text('Store: $purchaseStoreName'),
               ],
             ),
           ),
@@ -95,6 +96,49 @@ class ListItem extends StatelessWidget {
                 fontSize: 20.0,
               ),
             ),
+      /*children: <Widget>[
+        Column(
+          children: <Widget>[
+            TextField(
+              controller: _itemNameTextEditingController,
+              decoration: kTextFieldDecoration.copyWith(hintText: 'Item Name'),
+              onChanged: (value) {
+                _itemName = value;
+              },
+            ),
+            TextField(
+              keyboardType: TextInputType.number,
+              controller: _itemQuantityTextEditingController,
+              decoration: kTextFieldDecoration.copyWith(hintText: 'Quantity'),
+              onChanged: (value) {
+                _itemQuantity = int.parse(value);
+              },
+            ),
+            TextField(
+              controller: _itemStorageLocationTextEditingController,
+              decoration:
+                  kTextFieldDecoration.copyWith(hintText: 'Storage Location'),
+              onChanged: (value) {
+                _itemStorageLocation = value;
+              },
+            ),
+            Row(
+              children: <Widget>[
+                RaisedButton(
+                  child: Text('Submit'),
+                  onPressed: () {},
+                ),
+                RaisedButton(
+                  child: Text('Cancel'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            ),
+          ],
+        )
+      ],*/
     );
   }
 }
