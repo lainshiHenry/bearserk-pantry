@@ -1,9 +1,12 @@
 import 'package:bearserkpantry/services/stream_builder_functions.dart';
 import 'package:bearserkpantry/utilities/bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
+import 'dart:async';
 import 'package:bearserkpantry/utilities/app_drawer.dart';
 import 'package:bearserkpantry/services/build_list.dart';
 import 'package:bearserkpantry/utilities/constants.dart';
+import 'package:bearserkpantry/services/math_functions.dart';
+import 'package:bearserkpantry/utilities/snackbar.dart';
 
 class ShoppingList extends StatefulWidget {
   static String id = 'shopping_list';
@@ -15,6 +18,8 @@ class _ShoppingListState extends State<ShoppingList> {
   String _addItemName;
   int _addItemQuantity = 1;
   String _addItemStoreName;
+  bool _inputNameError = false;
+  bool _inputQuantityError = false;
   final _itemNameEditingController = TextEditingController();
   final _itemQtyEditingController = TextEditingController(text: '1');
   final _itemStoreNameEditingController = TextEditingController();
@@ -37,18 +42,22 @@ class _ShoppingListState extends State<ShoppingList> {
       ),
       drawer: AppDrawer(),
       bottomNavigationBar: BottomNavBar(),
-      body: Container(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Container(
-              child: Row(
+      body: Builder(
+        builder: (BuildContext context) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Row(
                 children: <Widget>[
-                  Expanded(
-                    flex: 3,
+                  Flexible(
+                    flex: 2,
                     child: TextField(
-                      decoration:
-                          kTextFieldDecoration.copyWith(hintText: 'Item Name'),
+                      decoration: _inputNameError
+                          ? kErrorTextFieldDecoration.copyWith(
+                              hintText: 'Invalid Item Name',
+                            )
+                          : kTextFieldDecoration.copyWith(
+                              hintText: 'Item Name'),
                       onChanged: (value) {
                         _addItemName = value;
                       },
@@ -56,18 +65,31 @@ class _ShoppingListState extends State<ShoppingList> {
                       textInputAction: TextInputAction.done,
                     ),
                   ),
-                  Expanded(
+                  Flexible(
+                    flex: 1,
                     child: TextField(
                       keyboardType: TextInputType.number,
-                      decoration:
-                          kTextFieldDecoration.copyWith(hintText: 'Quantity'),
+                      decoration: _inputQuantityError
+                          ? kErrorTextFieldDecoration.copyWith(
+                              hintText: 'Invalid Quantity')
+                          : kTextFieldDecoration.copyWith(hintText: 'Quantity'),
                       onChanged: (value) {
-                        _addItemQuantity = int.parse(value);
+                        if (isNumeric(value)) {
+                          _addItemQuantity = int.parse(value);
+                          setState(() {
+                            _inputQuantityError = false;
+                          });
+                        } else {
+                          setState(() {
+                            _inputQuantityError = true;
+                          });
+                        }
                       },
                       controller: _itemQtyEditingController,
                     ),
                   ),
-                  Expanded(
+                  Flexible(
+                    flex: 1,
                     child: TextField(
                       controller: _itemStoreNameEditingController,
                       decoration:
@@ -79,17 +101,47 @@ class _ShoppingListState extends State<ShoppingList> {
                   ),
                   RaisedButton(
                     child: Icon(Icons.add),
-                    onPressed: () {
+                    onPressed: () async {
                       try {
-                        addShoppingListItem(
-                          itemName: _addItemName,
-                          quantity: _addItemQuantity,
-                          storeName: _addItemStoreName,
-                        );
-                        _itemNameEditingController.clear();
-                        _itemQtyEditingController.clear();
-                        _itemQtyEditingController.text = '1';
-                        _itemStoreNameEditingController.clear();
+                        if ((_addItemName != null && _addItemName.length > 0) &&
+                            _addItemQuantity > 0) {
+                          setState(() {
+                            _inputNameError = false;
+                            _inputQuantityError = false;
+                          });
+                          print(_addItemName);
+                          bool addResult = await addShoppingListItem(
+                            itemName: _addItemName,
+                            quantity: _addItemQuantity,
+                            storeName: _addItemStoreName,
+                          );
+                          addResult
+                              ? Scaffold.of(context).showSnackBar(
+                                  snackBarPantry(
+                                    title:
+                                        'Added $_addItemName to Shopping List',
+                                  ),
+                                )
+                              : Scaffold.of(context).showSnackBar(
+                                  snackBarPantry(
+                                    title:
+                                        'Error adding $_addItemName to Shopping List',
+                                  ),
+                                );
+                          _itemNameEditingController.clear();
+                          _itemQtyEditingController.clear();
+                          _itemQtyEditingController.text = '1';
+                          _itemStoreNameEditingController.clear();
+                          _addItemName = '';
+                          _addItemQuantity = 1;
+                          _addItemStoreName = '';
+                        } else {
+                          setState(() {
+                            _inputNameError = true;
+                            _inputQuantityError = true;
+                            _itemQtyEditingController.clear();
+                          });
+                        }
                       } catch (e) {
                         print(e);
                       }
@@ -97,12 +149,12 @@ class _ShoppingListState extends State<ShoppingList> {
                   ),
                 ],
               ),
-            ),
-            Expanded(
-              child: buildShoppingList(),
-            ),
-          ],
-        ),
+              Expanded(
+                child: buildShoppingList(),
+              ),
+            ],
+          );
+        },
       ),
     );
   }

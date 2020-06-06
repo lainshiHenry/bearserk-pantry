@@ -61,6 +61,7 @@ class _PantryItemDetailsState extends State<PantryItemDetails> {
               },
             ),
             TextField(
+              keyboardType: TextInputType.number,
               controller: _itemQuantityTextEditingController,
               decoration: kTextFieldDecoration.copyWith(hintText: 'Quantity'),
               onChanged: (value) {
@@ -97,12 +98,19 @@ class _PantryItemDetailsState extends State<PantryItemDetails> {
                   child: Text('Submit'),
                   onPressed: () {
                     try {
-                      addToPantry(
-                        itemName: _itemName,
-                        quantity: _itemQuantity,
-                        storageLocation: _itemStorageLocation,
-                        barcode: _itemBarcode,
-                      );
+                      if (_itemQuantity == 0) {
+                        deleteFromPantry(
+                          itemName: _itemName,
+                          barcode: _itemBarcode,
+                        );
+                      } else {
+                        addToPantry(
+                          itemName: _itemName,
+                          quantity: _itemQuantity,
+                          storageLocation: _itemStorageLocation,
+                          barcode: _itemBarcode,
+                        );
+                      }
                       Navigator.pop(context);
                     } catch (e) {
                       print(e);

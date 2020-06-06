@@ -62,6 +62,7 @@ class _ShoppingListItemDetailsState extends State<ShoppingListItemDetails> {
               },
             ),
             TextField(
+              keyboardType: TextInputType.number,
               controller: _itemQuantityTextEditingController,
               decoration: kTextFieldDecoration.copyWith(hintText: 'Quantity'),
               onChanged: (value) {
@@ -76,29 +77,34 @@ class _ShoppingListItemDetailsState extends State<ShoppingListItemDetails> {
                 _purchaseStoreLocation = value;
               },
             ),
-            args.barcode == null
-                ? SizedBox(
-                    height: 0.0,
-                  )
-                : TextField(
-                    controller: _itemBarcodeTextEditingController,
-                    decoration:
-                        kTextFieldDecoration.copyWith(hintText: 'Item Barcode'),
-                    onChanged: (value) {
-                      _itemBarcode = value;
-                    },
-                  ),
+            TextField(
+              keyboardType: TextInputType.number,
+              controller: _itemBarcodeTextEditingController,
+              decoration:
+                  kTextFieldDecoration.copyWith(hintText: 'Item Barcode'),
+              onChanged: (value) {
+                _itemBarcode = value;
+              },
+            ),
             Row(
               children: <Widget>[
                 RaisedButton(
                   child: Text('Submit'),
                   onPressed: () {
                     try {
-                      addShoppingListItem(
-                        itemName: _itemName,
-                        quantity: _itemQuantity,
-                        storeName: _purchaseStoreLocation,
-                      );
+                      if (_itemQuantity == 0) {
+                        deleteShoppingListItem(
+                          itemName: _itemName,
+                          quantity: _itemQuantity,
+                          storeName: _purchaseStoreLocation,
+                        );
+                      } else {
+                        addShoppingListItem(
+                          itemName: _itemName,
+                          quantity: _itemQuantity,
+                          storeName: _purchaseStoreLocation,
+                        );
+                      }
                       Navigator.pop(context);
                     } catch (e) {
                       print(e);

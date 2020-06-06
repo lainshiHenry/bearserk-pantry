@@ -3,12 +3,7 @@ import 'package:bearserkpantry/screens/unit_converter.dart';
 import 'package:flutter/material.dart';
 import 'constants.dart';
 import 'package:bearserkpantry/screens/all_items.dart';
-import 'package:bearserkpantry/screens/basic_item.dart';
-import 'package:bearserkpantry/screens/category_page.dart';
-import 'package:bearserkpantry/screens/expired_food.dart';
-import 'package:bearserkpantry/screens/expiring_food.dart';
 import 'package:bearserkpantry/screens/shopping_list.dart';
-import 'package:bearserkpantry/screens/storage_area.dart';
 
 class AppDrawer extends StatelessWidget {
   @override
@@ -25,11 +20,6 @@ class AppDrawer extends StatelessWidget {
           NavigationItem(
             navItemName: 'All Items',
             destination: AllItems.id,
-          ),
-          NavigationItem(
-            navItemName: 'Category',
-            destination: CategoryPage.id,
-            leftIcon: Icons.category,
           ),
           NavigationItem(
             navItemName: 'Shopping List',
@@ -70,27 +60,3 @@ class NavigationItem extends StatelessWidget {
     );
   }
 }
-
-/*            NavigationItem(
-            navItemName: 'Storage Area',
-            destination: StorageArea.id,
-            leftIcon: Icons.storage,
-          ),
-          NavigationItem(
-            navItemName: 'Expired Items',
-            destination: ExpiredFood.id,
-            leftIcon: Icons.delete,
-          ),
-NavigationItem(
-
-            navItemName: 'Basic Items',
-            destination: BasicItem.id,
-            leftIcon: Icons.fastfood,
-          ),
-          NavigationItem(
-            navItemName: 'Expiring Food',
-            destination: ExpiringFood.id,
-            leftIcon: Icons.alarm,
-          ),
-
- */

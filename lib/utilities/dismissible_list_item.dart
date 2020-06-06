@@ -3,6 +3,7 @@ import 'package:bearserkpantry/screens/shopping_list_item_details.dart';
 import 'package:flutter/material.dart';
 import 'package:bearserkpantry/utilities/list_item.dart';
 import 'package:bearserkpantry/services/stream_builder_functions.dart';
+import 'package:bearserkpantry/utilities/snackbar.dart';
 import 'package:strings/strings.dart';
 import 'dart:async';
 
@@ -59,6 +60,11 @@ class _DismissibleListItemState extends State<DismissibleListItem> {
           );
         });
         Timer(Duration(seconds: 2), () {});
+        Scaffold.of(context).showSnackBar(
+          snackBarPantry(
+            title: '${widget.itemName} Bought',
+          ),
+        );
       },
     );
   }

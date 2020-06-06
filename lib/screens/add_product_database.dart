@@ -15,7 +15,7 @@ class AddProductDatabase extends StatefulWidget {
 class _AddProductDatabaseState extends State<AddProductDatabase> {
   String _errorMessage;
   bool _gotError = false;
-  String _returnedMessage;
+
   String _itemBarcode;
   String _itemProductBrand;
   String _itemProductName;
@@ -139,12 +139,7 @@ class _AddProductDatabaseState extends State<AddProductDatabase> {
           RaisedButton(
             child: Text('Submit'),
             onPressed: () async {
-              print(_itemBarcode);
-              print(_itemProductName);
-              print(_itemProductBrand);
-              print(_itemProductQuantity);
-              print(_itemProductQuantityUnit);
-              _returnedMessage = await addToProductDB(
+              String _returnedMessage = await addToProductDB(
                 barcode: _itemBarcode,
                 productName: _itemProductName,
                 productBrand: _itemProductBrand,

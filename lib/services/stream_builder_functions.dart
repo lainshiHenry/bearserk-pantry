@@ -13,8 +13,7 @@ Widget getPantryStream() {
           .collection('pantry')
           .document('$pantryID')
           .collection('pantry')
-          .where('quantity', isGreaterThan: 0)
-          .orderBy('quantity', descending: false)
+          .orderBy('itemName', descending: false)
           .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
@@ -62,6 +61,7 @@ Widget getShoppingListStream() {
           .collection('pantry')
           .document('$pantryID')
           .collection('shoppingList')
+          .orderBy('itemName', descending: false)
           .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
@@ -108,45 +108,61 @@ Widget getShoppingListStream() {
       });
 }
 
-void addShoppingListItem(
+Future<bool> addShoppingListItem(
     {String itemName, int quantity, String storeName}) async {
+  String _formattedItemName = itemName != null ? itemName.toLowerCase() : '';
+  String _formattedStoreName = storeName != null ? storeName.toLowerCase() : '';
+  bool _result = false;
+
+  if (itemName != '') {
+    try {
+      await _firestoreInstance
+          .collection('pantry')
+          .document('$pantryID')
+          .collection('shoppingList')
+          .document('$_formattedItemName')
+          .setData({
+        'itemName': '$_formattedItemName',
+        'quantity': quantity,
+        'storeName': '$_formattedStoreName',
+      }, merge: true);
+      _result = true;
+    } catch (e) {
+      print(e);
+      _result = false;
+    }
+  } else {
+    _result = false;
+  }
+  return _result;
+}
+
+void deleteShoppingListItem(
+    {String itemName, int quantity, String storeName}) async {
+  String _formattedItemName = itemName != null ? itemName.toLowerCase() : '';
+  if (_formattedItemName != '') {
+    try {
+      await _firestoreInstance
+          .collection('pantry')
+          .document('$pantryID')
+          .collection('shoppingList')
+          .document('$_formattedItemName')
+          .delete();
+    } catch (e) {
+      print(e);
+    }
+  }
+}
+
+Future<void> purchaseItem(
+    {String itemName, int quantity, String storeName}) async {
+  String _formattedItemName = itemName != null ? itemName.toLowerCase() : '';
   try {
     await _firestoreInstance
         .collection('pantry')
         .document('$pantryID')
         .collection('shoppingList')
         .document('${itemName.toLowerCase()}')
-        .setData({
-      'itemName': '${itemName.toLowerCase()}',
-      'quantity': quantity,
-      'storeName': '${storeName.toLowerCase()}',
-    }, merge: true);
-  } catch (e) {
-    print(e);
-  }
-}
-
-Future<void> purchaseItem(
-    {String itemName, int quantity, String storeName}) async {
-//  var currentQuantity = _firestoreInstance.collection('pantry').document('$pantryID').collection('shoppingList').document('$itemName');
-
-  try {
-    /* only used when buying less than required amount
-    await _firestoreInstance
-        .collection('pantry')
-        .document('$pantryID')
-        .collection('shoppingList')
-        .document('$itemName')
-        .setData({
-      'itemName': '$itemName',
-      'quantity': 0,
-    }, merge: true);*/
-
-    await _firestoreInstance
-        .collection('pantry')
-        .document('$pantryID')
-        .collection('shoppingList')
-        .document('$itemName')
         .delete();
 
     addToPurchaseHistory(
@@ -165,18 +181,21 @@ Future<void> purchaseItem(
 
 void addToPurchaseHistory({String itemName, int quantity}) async {
   String currentTimestamp = DateTime.now().millisecondsSinceEpoch.toString();
-  try {
-    await _firestoreInstance
-        .collection('pantry')
-        .document('$pantryID')
-        .collection('purchaseHistory')
-        .document('$currentTimestamp')
-        .setData({
-      'itemName': '${itemName.toLowerCase()}',
-      'quantity': quantity,
-    }, merge: true);
-  } catch (e) {
-    print(e);
+  String _formattedItemName = itemName != null ? itemName.toLowerCase() : '';
+  if (_formattedItemName != '') {
+    try {
+      await _firestoreInstance
+          .collection('pantry')
+          .document('$pantryID')
+          .collection('purchaseHistory')
+          .document('$currentTimestamp')
+          .setData({
+        'itemName': '$_formattedItemName',
+        'quantity': quantity,
+      }, merge: true);
+    } catch (e) {
+      print(e);
+    }
   }
 }
 
@@ -185,24 +204,44 @@ void addToPantry(
     int quantity,
     String storageLocation,
     String barcode}) async {
-  await _firestoreInstance
-      .collection('pantry')
-      .document('$pantryID')
-      .collection('pantry')
-      .document('$itemName')
-      .setData({
-    'itemName': '${itemName.toLowerCase()}',
-    'quantity': quantity,
-    'storageLocation': '${storageLocation.toLowerCase()}',
-    'barcode': '$barcode',
-  }, merge: true);
+  String _formattedItemName = itemName != null ? itemName.toLowerCase() : '';
+  String _formattedStorageLocation =
+      storageLocation != null ? storageLocation.toLowerCase() : '';
 
-  /* if (barcode != null) {
-    addToProductDB(
-      barcode: barcode,
-      productName: itemName,
-    );
-  }*/
+  if (_formattedItemName != '') {
+    try {
+      await _firestoreInstance
+          .collection('pantry')
+          .document('$pantryID')
+          .collection('pantry')
+          .document('$_formattedItemName')
+          .setData({
+        'itemName': '$_formattedItemName',
+        'quantity': quantity,
+        'storageLocation': '$_formattedStorageLocation',
+        'barcode': '$barcode',
+      }, merge: true);
+    } catch (e) {
+      print(e);
+    }
+  }
+}
+
+Future<String> deleteFromPantry({String itemName, String barcode}) async {
+  String _errorMsg;
+  try {
+    await _firestoreInstance
+        .collection('pantry')
+        .document('$pantryID')
+        .collection('pantry')
+        .document('${itemName.toLowerCase()}')
+        .delete();
+    _errorMsg = null;
+  } catch (e) {
+    print(e);
+    _errorMsg = e.message.toString();
+  }
+  return _errorMsg;
 }
 
 Future<String> addToProductDB(

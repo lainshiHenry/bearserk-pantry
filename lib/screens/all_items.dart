@@ -25,30 +25,7 @@ class _AllItemsState extends State<AllItems> {
       ),
       drawer: AppDrawer(),
       bottomNavigationBar: BottomNavBar(),
-      body: SafeArea(
-        child: Column(
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                RaisedButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, AddPantryItem.id);
-                  },
-                  child: Text('Add'),
-                ),
-                RaisedButton(
-                  onPressed: () {},
-                  child: Text('Delete'),
-                ),
-              ],
-            ),
-            Expanded(
-              child: buildPantryList(),
-            ),
-          ],
-        ),
-      ),
+      body: buildPantryList(),
     );
   }
 }
