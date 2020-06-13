@@ -1,9 +1,9 @@
+import 'package:bearserkpantry/data/pantry_user.dart';
 import 'package:bearserkpantry/services/stream_data.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:bearserkpantry/utilities/dismissible_list_item.dart';
 import 'package:bearserkpantry/utilities/pantry_list_item.dart';
-import 'package:bearserkpantry/utilities/dev_constants.dart';
 
 final _firestoreInstance = Firestore.instance;
 
@@ -11,7 +11,7 @@ Widget getPantryStream() {
   return StreamBuilder<QuerySnapshot>(
       stream: _firestoreInstance
           .collection('pantry')
-          .document('$pantryID')
+          .document('${currentUser.pantryID}')
           .collection('pantry')
           .orderBy('itemName', descending: false)
           .snapshots(),
@@ -59,7 +59,7 @@ Widget getShoppingListStream() {
   return StreamBuilder<QuerySnapshot>(
       stream: _firestoreInstance
           .collection('pantry')
-          .document('$pantryID')
+          .document('${currentUser.pantryID}')
           .collection('shoppingList')
           .orderBy('itemName', descending: false)
           .snapshots(),
@@ -108,6 +108,25 @@ Widget getShoppingListStream() {
       });
 }
 
+void addToErrorLog({String errorMessage, String itemName}) async {
+  String currentTimestamp = DateTime.now().millisecondsSinceEpoch.toString();
+  String _formattedItemName = itemName != null ? itemName.toLowerCase() : '';
+
+  if (itemName != '') {
+    try {
+      await _firestoreInstance
+          .collection('errorLog')
+          .document('$currentTimestamp')
+          .setData({
+        'itemName': '$_formattedItemName',
+        'errorMessage': '$errorMessage',
+      }, merge: false);
+    } catch (e) {
+      print(e);
+    }
+  }
+}
+
 Future<bool> addShoppingListItem(
     {String itemName, int quantity, String storeName}) async {
   String _formattedItemName = itemName != null ? itemName.toLowerCase() : '';
@@ -118,7 +137,7 @@ Future<bool> addShoppingListItem(
     try {
       await _firestoreInstance
           .collection('pantry')
-          .document('$pantryID')
+          .document('${currentUser.pantryID}')
           .collection('shoppingList')
           .document('$_formattedItemName')
           .setData({
@@ -127,8 +146,18 @@ Future<bool> addShoppingListItem(
         'storeName': '$_formattedStoreName',
       }, merge: true);
       _result = true;
+
+      addTransactionHistory(
+        itemName: _formattedItemName,
+        quantity: quantity,
+        storeName: _formattedStoreName,
+        action: 'add',
+        fromMenu: 'shopping list',
+      );
     } catch (e) {
       print(e);
+      String _errorMsg = e.message.toString();
+      addToErrorLog(errorMessage: _errorMsg, itemName: _formattedItemName);
       _result = false;
     }
   } else {
@@ -140,16 +169,27 @@ Future<bool> addShoppingListItem(
 void deleteShoppingListItem(
     {String itemName, int quantity, String storeName}) async {
   String _formattedItemName = itemName != null ? itemName.toLowerCase() : '';
+  String _formattedStoreName = storeName != null ? storeName.toLowerCase() : '';
   if (_formattedItemName != '') {
     try {
       await _firestoreInstance
           .collection('pantry')
-          .document('$pantryID')
+          .document('${currentUser.pantryID}')
           .collection('shoppingList')
           .document('$_formattedItemName')
           .delete();
+
+      addTransactionHistory(
+        itemName: _formattedItemName,
+        quantity: quantity,
+        storeName: _formattedStoreName,
+        action: 'delete',
+        fromMenu: 'shopping list',
+      );
     } catch (e) {
       print(e);
+      String _errorMsg = e.message.toString();
+      addToErrorLog(errorMessage: _errorMsg, itemName: _formattedItemName);
     }
   }
 }
@@ -160,9 +200,9 @@ Future<void> purchaseItem(
   try {
     await _firestoreInstance
         .collection('pantry')
-        .document('$pantryID')
+        .document('${currentUser.pantryID}')
         .collection('shoppingList')
-        .document('${itemName.toLowerCase()}')
+        .document('$_formattedItemName')
         .delete();
 
     addToPurchaseHistory(
@@ -176,6 +216,8 @@ Future<void> purchaseItem(
     );
   } catch (e) {
     print(e);
+    String _errorMsg = e.message.toString();
+    addToErrorLog(errorMessage: _errorMsg, itemName: _formattedItemName);
   }
 }
 
@@ -186,15 +228,23 @@ void addToPurchaseHistory({String itemName, int quantity}) async {
     try {
       await _firestoreInstance
           .collection('pantry')
-          .document('$pantryID')
+          .document('${currentUser.pantryID}')
           .collection('purchaseHistory')
           .document('$currentTimestamp')
           .setData({
         'itemName': '$_formattedItemName',
         'quantity': quantity,
       }, merge: true);
+
+      addTransactionHistory(
+          itemName: _formattedItemName,
+          quantity: quantity,
+          action: 'add',
+          fromMenu: 'purchase history');
     } catch (e) {
       print(e);
+      String _errorMsg = e.message.toString();
+      addToErrorLog(errorMessage: _errorMsg, itemName: _formattedItemName);
     }
   }
 }
@@ -207,39 +257,66 @@ void addToPantry(
   String _formattedItemName = itemName != null ? itemName.toLowerCase() : '';
   String _formattedStorageLocation =
       storageLocation != null ? storageLocation.toLowerCase() : '';
+  String _formattedBarcode = barcode != null ? barcode : '';
 
   if (_formattedItemName != '') {
     try {
       await _firestoreInstance
           .collection('pantry')
-          .document('$pantryID')
+          .document('${currentUser.pantryID}')
           .collection('pantry')
           .document('$_formattedItemName')
           .setData({
         'itemName': '$_formattedItemName',
         'quantity': quantity,
         'storageLocation': '$_formattedStorageLocation',
-        'barcode': '$barcode',
+        'barcode': '$_formattedBarcode',
       }, merge: true);
+
+      addTransactionHistory(
+        itemName: _formattedItemName,
+        quantity: quantity,
+        storageLocation: _formattedStorageLocation,
+        barcode: _formattedBarcode,
+        action: 'add',
+        storeName: 'pantry',
+      );
     } catch (e) {
       print(e);
+      String _errorMsg = e.message.toString();
+      addToErrorLog(errorMessage: _errorMsg, itemName: _formattedItemName);
     }
   }
 }
 
 Future<String> deleteFromPantry({String itemName, String barcode}) async {
+  String _formattedItemName = itemName != null ? itemName.toLowerCase() : '';
+  String _formattedBarcode = barcode != null ? barcode : '';
   String _errorMsg;
-  try {
-    await _firestoreInstance
-        .collection('pantry')
-        .document('$pantryID')
-        .collection('pantry')
-        .document('${itemName.toLowerCase()}')
-        .delete();
-    _errorMsg = null;
-  } catch (e) {
-    print(e);
-    _errorMsg = e.message.toString();
+
+  if (_formattedItemName != '') {
+    try {
+      await _firestoreInstance
+          .collection('pantry')
+          .document('${currentUser.pantryID}')
+          .collection('pantry')
+          .document('$_formattedItemName')
+          .delete();
+      _errorMsg = null;
+
+      addTransactionHistory(
+        itemName: itemName,
+        barcode: _formattedBarcode,
+        action: 'delete',
+        fromMenu: 'pantry',
+      );
+    } catch (e) {
+      print(e);
+      _errorMsg = e.message.toString();
+      addToErrorLog(errorMessage: _errorMsg, itemName: _formattedItemName);
+    }
+  } else {
+    _errorMsg = 'Could not locate $itemName or $barcode';
   }
   return _errorMsg;
 }
@@ -264,9 +341,59 @@ Future<String> addToProductDB(
       'quantityUnit': '${quantityUnit.toLowerCase()}',
     }, merge: true);
     _errorMsg = null;
+
+    addTransactionHistory(
+      itemName: productName,
+      barcode: barcode,
+      action: 'add',
+      fromMenu: 'product database',
+    );
   } catch (e) {
     print(e);
-    _errorMsg = e.message.toString();
+    String _errorMsg = e.message.toString();
+    addToErrorLog(errorMessage: _errorMsg, itemName: productName);
   }
   return _errorMsg;
+}
+
+void editProductDB() {}
+
+void addTransactionHistory(
+    {String itemName,
+    int quantity,
+    String storageLocation,
+    String barcode,
+    String storeName,
+    String action,
+    String fromMenu}) async {
+  String currentTimestamp = DateTime.now().millisecondsSinceEpoch.toString();
+  String _formattedItemName = itemName != null ? itemName.toLowerCase() : '';
+  String _formattedStorageLocation =
+      storageLocation != null ? storageLocation.toLowerCase() : '';
+  String _formattedStoreName = storeName != null ? storeName.toLowerCase() : '';
+  String _formattedBarcode = barcode != null ? barcode : '';
+  String _formattedAction = action.toLowerCase();
+  String _formattedFromMenu = fromMenu.toLowerCase();
+
+  try {
+    await _firestoreInstance
+        .collection('pantry')
+        .document('${currentUser.pantryID}')
+        .collection('transactionHistory')
+        .document('$currentTimestamp')
+        .setData({
+      'timestamp': '$currentTimestamp',
+      'itemName': '$_formattedItemName',
+      'quantity': quantity,
+      'barcode': '$_formattedBarcode',
+      'storageLocation': '$_formattedStorageLocation',
+      'storeName': '$_formattedStoreName',
+      'action': '$_formattedAction',
+      'fromMenu': '$_formattedFromMenu',
+    }, merge: true);
+  } catch (e) {
+    print(e);
+    String _errorMsg = e.message.toString();
+    addToErrorLog(errorMessage: _errorMsg, itemName: _formattedItemName);
+  }
 }

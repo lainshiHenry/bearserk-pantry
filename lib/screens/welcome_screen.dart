@@ -1,4 +1,7 @@
+import 'package:bearserkpantry/dev/dev_data.dart';
 import 'package:bearserkpantry/screens/all_items.dart';
+import 'package:bearserkpantry/screens/shopping_list.dart';
+import 'package:bearserkpantry/services/auth_methods.dart';
 import 'package:bearserkpantry/utilities/constants.dart';
 import 'package:flutter/material.dart';
 
@@ -23,9 +26,15 @@ class WelcomeScreen extends StatelessWidget {
               height: 24.0,
             ),
             FlatButton(
-              onPressed: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, AllItems.id);
+              onPressed: () async {
+                bool _signinSuccessful = await signInMethod(
+                  email: devEmail,
+                  password: devPassword,
+                );
+                if (_signinSuccessful) {
+                  Navigator.pop(context);
+                  Navigator.pushNamed(context, ShoppingList.id);
+                }
               },
               child: Text('Get Started'),
             ),

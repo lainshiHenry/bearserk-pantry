@@ -3,7 +3,7 @@ import 'package:bearserkpantry/screens/all_items.dart';
 import 'package:bearserkpantry/screens/shopping_list.dart';
 import 'package:flutter/material.dart';
 
-int _selectedIndex = 0;
+int _selectedIndex = 2;
 
 class BottomNavBar extends StatefulWidget {
   @override

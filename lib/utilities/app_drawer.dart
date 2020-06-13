@@ -1,5 +1,6 @@
 import 'package:bearserkpantry/screens/add_product_database.dart';
 import 'package:bearserkpantry/screens/unit_converter.dart';
+import 'package:bearserkpantry/services/auth_methods.dart';
 import 'package:flutter/material.dart';
 import 'constants.dart';
 import 'package:bearserkpantry/screens/all_items.dart';
@@ -34,6 +35,15 @@ class AppDrawer extends StatelessWidget {
             navItemName: 'Add To Product DB',
             destination: AddProductDatabase.id,
             leftIcon: Icons.sd_storage,
+          ),
+          ListTile(
+            leading: Icon(Icons.power_settings_new),
+            title: Text('Log Off'),
+            onTap: () {
+              signOutCurrentUser();
+              Navigator.pop(context);
+              Navigator.pushNamed(context, '/');
+            },
           ),
         ],
       ),
