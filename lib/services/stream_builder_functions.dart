@@ -80,18 +80,18 @@ Widget getShoppingListStream() {
           final int quantity = shoppingListItem.data['quantity'];
           final String storeName = shoppingListItem.data['storeName'];
 
-          final sListItem = DismissibleListItem(
+          /*final sListItem = DismissibleListItem(
             itemName: itemName,
             quantity: quantity,
             storeName: storeName,
-          );
+          );*/
           final sListItem2 = ShoppingListItem(
             itemName: itemName,
             quantity: quantity,
             storeName: storeName,
           );
 
-          shoppingListStream.add(sListItem);
+          //shoppingListStream.add(sListItem);
           shoppingListStream2.add(sListItem2);
         }
         userShoppingListStream = shoppingListStream;
@@ -99,25 +99,7 @@ Widget getShoppingListStream() {
         return ShoppingListStreamBuilder(
           list: shoppingListStream2,
         );
-//        return Container(
-//          child: ListView.separated(
-//            shrinkWrap: true,
-//            itemCount: shoppingListStream.length,
-//            separatorBuilder: (BuildContext context, int index) =>
-//                const Divider(
-//              thickness: 2.0,
-//              indent: 30.0,
-//              endIndent: 30.0,
-//              height: 0.0,
-//            ),
-//            //padding: EdgeInsets.symmetric(vertical: 20.0),
-//            itemBuilder: (BuildContext context, int index) {
-//              return Container(
-//                child: shoppingListStream[index],
-//              );
-//            },
-//          ),
-//        );
+//
       });
 }
 

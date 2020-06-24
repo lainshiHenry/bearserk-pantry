@@ -44,6 +44,7 @@ class _ShoppingListStreamBuilderState extends State<ShoppingListStreamBuilder> {
               _itemNameTextEditingController.text = widget.list[index].itemName;
               _itemQuantityTextEditingController.text =
                   widget.list[index].quantity.toString();
+              newQuantity = widget.list[index].quantity;
               _purchaseStoreLocationTextEditingController.text =
                   widget.list[index].storeName;
             });
@@ -84,9 +85,43 @@ class _ShoppingListStreamBuilderState extends State<ShoppingListStreamBuilder> {
                       Row(
                         children: <Widget>[
                           RaisedButton(
-                            child: Text('Submit'),
+                            color: Colors.green,
+                            child: Text('Bought'),
                             onPressed: () async {
-                              bool result = false;
+                              bool _result = false;
+
+                              try {
+                                if (newQuantity != 0) {
+                                  _result = await purchaseItem(
+                                    itemName: item.itemName,
+                                    quantity: newQuantity,
+                                    storeName: item.storeName,
+                                  );
+                                  _result
+                                      ? showSnackBarPantry(
+                                          context: context,
+                                          displayText:
+                                              '${item.itemName} Bought',
+                                        )
+                                      : showSnackBarPantry(
+                                          context: context,
+                                          displayText:
+                                              'Error buying ${item.itemName}');
+                                }
+
+                                setState(() {
+                                  item.isExpanded = false;
+                                });
+                              } catch (e) {
+                                print(e);
+                              }
+                            },
+                          ),
+                          RaisedButton(
+                            color: Colors.blue,
+                            child: Text('Edit'),
+                            onPressed: () async {
+                              bool _result = false;
                               String _resultText;
 
                               try {
@@ -98,13 +133,13 @@ class _ShoppingListStreamBuilderState extends State<ShoppingListStreamBuilder> {
                                   );
                                   _resultText = 'Delete';
                                 } else {
-                                  result = await addShoppingListItem(
+                                  _result = await addShoppingListItem(
                                     itemName: item.itemName,
                                     quantity: newQuantity,
                                     storeName: item.storeName,
                                   );
                                   _resultText = 'Edit';
-                                  result
+                                  _result
                                       ? showSnackBarPantry(
                                           context: context,
                                           displayText:
