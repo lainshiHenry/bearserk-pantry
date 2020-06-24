@@ -1,3 +1,4 @@
+import 'package:bearserkpantry/dev/dev_test.dart';
 import 'package:bearserkpantry/screens/add_pantry_Item.dart';
 import 'package:bearserkpantry/screens/add_product_database.dart';
 import 'package:bearserkpantry/screens/pantry_item_details.dart';
@@ -22,6 +23,7 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
+//        '/': (context) => DevTest(),
         '/': (context) => WelcomeScreen(),
         AllItems.id: (context) => AllItems(),
         ShoppingList.id: (context) => ShoppingList(),

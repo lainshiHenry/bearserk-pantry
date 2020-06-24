@@ -8,14 +8,6 @@ class ListItem extends StatelessWidget {
   final String storageLocation;
   final String mainTitle;
   final String purchaseStoreName;
-  final String column1Row1Heading;
-  final String column1Row1Body;
-  final String column1Row2Heading;
-  final String column1Row2Body;
-  final String column2Row1Heading;
-  final String column2Row1Body;
-  final String column2Row2Heading;
-  final String column2Row2Body;
   final String trailingItem;
   final String destinationRouteName;
   final Object destinationArguments;
@@ -29,14 +21,6 @@ class ListItem extends StatelessWidget {
       this.moveItem,
       this.purchaseStoreName,
       this.mainTitle,
-      this.column1Row1Heading,
-      this.column1Row1Body,
-      this.column1Row2Heading,
-      this.column1Row2Body,
-      this.column2Row1Heading,
-      this.column2Row1Body,
-      this.column2Row2Heading,
-      this.column2Row2Body,
       this.trailingItem,
       this.destinationRouteName,
       this.destinationArguments});
@@ -49,10 +33,10 @@ class ListItem extends StatelessWidget {
         '$itemName',
         style: TextStyle(fontWeight: FontWeight.bold),
       ),
-      onTap: () {
+      /*onTap: () {
         Navigator.pushNamed(context, destinationRouteName,
             arguments: destinationArguments);
-      },
+      },*/
       subtitle: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
@@ -72,19 +56,6 @@ class ListItem extends StatelessWidget {
               ],
             ),
           ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                column2Row1Body == null
-                    ? SizedBox(height: 0)
-                    : Text('$column2Row1Heading: $column2Row1Body'),
-                column2Row2Body == null
-                    ? SizedBox(height: 0)
-                    : Text('$column2Row2Heading: $column2Row2Body'),
-              ],
-            ),
-          ),
         ],
       ),
       trailing: quantity == null
@@ -96,49 +67,6 @@ class ListItem extends StatelessWidget {
                 fontSize: 20.0,
               ),
             ),
-      /*children: <Widget>[
-        Column(
-          children: <Widget>[
-            TextField(
-              controller: _itemNameTextEditingController,
-              decoration: kTextFieldDecoration.copyWith(hintText: 'Item Name'),
-              onChanged: (value) {
-                _itemName = value;
-              },
-            ),
-            TextField(
-              keyboardType: TextInputType.number,
-              controller: _itemQuantityTextEditingController,
-              decoration: kTextFieldDecoration.copyWith(hintText: 'Quantity'),
-              onChanged: (value) {
-                _itemQuantity = int.parse(value);
-              },
-            ),
-            TextField(
-              controller: _itemStorageLocationTextEditingController,
-              decoration:
-                  kTextFieldDecoration.copyWith(hintText: 'Storage Location'),
-              onChanged: (value) {
-                _itemStorageLocation = value;
-              },
-            ),
-            Row(
-              children: <Widget>[
-                RaisedButton(
-                  child: Text('Submit'),
-                  onPressed: () {},
-                ),
-                RaisedButton(
-                  child: Text('Cancel'),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
-              ],
-            ),
-          ],
-        )
-      ],*/
     );
   }
 }

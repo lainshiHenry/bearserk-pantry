@@ -1,9 +1,11 @@
 import 'package:bearserkpantry/data/pantry_user.dart';
 import 'package:bearserkpantry/services/stream_data.dart';
+import 'package:bearserkpantry/utilities/shopping_list_item.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:bearserkpantry/utilities/dismissible_list_item.dart';
 import 'package:bearserkpantry/utilities/pantry_list_item.dart';
+import 'package:bearserkpantry/services/shopping_list_stream_builder.dart';
 
 final _firestoreInstance = Firestore.instance;
 
@@ -71,6 +73,7 @@ Widget getShoppingListStream() {
         }
         final shoppingList = snapshot.data.documents;
         List<DismissibleListItem> shoppingListStream = [];
+        List<ShoppingListItem> shoppingListStream2 = [];
 
         for (var shoppingListItem in shoppingList) {
           final String itemName = shoppingListItem.data['itemName'];
@@ -82,29 +85,39 @@ Widget getShoppingListStream() {
             quantity: quantity,
             storeName: storeName,
           );
+          final sListItem2 = ShoppingListItem(
+            itemName: itemName,
+            quantity: quantity,
+            storeName: storeName,
+          );
 
           shoppingListStream.add(sListItem);
+          shoppingListStream2.add(sListItem2);
         }
         userShoppingListStream = shoppingListStream;
 
-        return Container(
-          child: ListView.separated(
-            itemCount: shoppingListStream.length,
-            separatorBuilder: (BuildContext context, int index) =>
-                const Divider(
-              thickness: 2.0,
-              indent: 30.0,
-              endIndent: 30.0,
-              height: 0.0,
-            ),
-            //padding: EdgeInsets.symmetric(vertical: 20.0),
-            itemBuilder: (BuildContext context, int index) {
-              return Container(
-                child: shoppingListStream[index],
-              );
-            },
-          ),
+        return ShoppingListStreamBuilder(
+          list: shoppingListStream2,
         );
+//        return Container(
+//          child: ListView.separated(
+//            shrinkWrap: true,
+//            itemCount: shoppingListStream.length,
+//            separatorBuilder: (BuildContext context, int index) =>
+//                const Divider(
+//              thickness: 2.0,
+//              indent: 30.0,
+//              endIndent: 30.0,
+//              height: 0.0,
+//            ),
+//            //padding: EdgeInsets.symmetric(vertical: 20.0),
+//            itemBuilder: (BuildContext context, int index) {
+//              return Container(
+//                child: shoppingListStream[index],
+//              );
+//            },
+//          ),
+//        );
       });
 }
 
@@ -194,9 +207,10 @@ void deleteShoppingListItem(
   }
 }
 
-Future<void> purchaseItem(
+Future<bool> purchaseItem(
     {String itemName, int quantity, String storeName}) async {
   String _formattedItemName = itemName != null ? itemName.toLowerCase() : '';
+  bool _result = false;
   try {
     await _firestoreInstance
         .collection('pantry')
@@ -214,11 +228,13 @@ Future<void> purchaseItem(
       itemName: itemName,
       quantity: quantity,
     );
+    _result = true;
   } catch (e) {
     print(e);
     String _errorMsg = e.message.toString();
     addToErrorLog(errorMessage: _errorMsg, itemName: _formattedItemName);
   }
+  return _result;
 }
 
 void addToPurchaseHistory({String itemName, int quantity}) async {

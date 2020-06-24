@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 
-Widget snackBarPantryUndo({String title, Function undoFunction}) {
-  return SnackBar(
-    content: Text(title),
-    action: SnackBarAction(
-      label: 'Undo',
-      onPressed: undoFunction,
+void showSnackBarPantry(
+    {BuildContext context, String displayText, Function undoFunction}) {
+  Scaffold.of(context).showSnackBar(
+    SnackBar(
+      content: Text(displayText),
+      action: undoFunction == null
+          ? null
+          : SnackBarAction(
+              label: 'Undo',
+              onPressed: undoFunction,
+            ),
     ),
-  );
-}
-
-Widget snackBarPantry({String title}) {
-  return SnackBar(
-    content: Text(title),
   );
 }

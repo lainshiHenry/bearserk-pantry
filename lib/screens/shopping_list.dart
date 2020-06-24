@@ -45,109 +45,144 @@ class _ShoppingListState extends State<ShoppingList> {
       body: Builder(
         builder: (BuildContext context) {
           return Column(
+            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Flexible(
-                    flex: 2,
-                    child: TextField(
-                      decoration: _inputNameError
-                          ? kErrorTextFieldDecoration.copyWith(
-                              hintText: 'Invalid Item Name',
-                            )
-                          : kTextFieldDecoration.copyWith(
-                              hintText: 'Item Name'),
-                      onChanged: (value) {
-                        _addItemName = value;
-                      },
-                      controller: _itemNameEditingController,
-                      textInputAction: TextInputAction.done,
+              Container(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Flexible(
+                      flex: 3,
+                      fit: FlexFit.loose,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Row(
+                            children: <Widget>[
+                              Flexible(
+                                fit: FlexFit.loose,
+                                flex: 3,
+                                child: TextField(
+                                  decoration: _inputNameError
+                                      ? kErrorTextFieldDecoration.copyWith(
+                                          hintText: 'Invalid Item Name',
+                                        )
+                                      : kTextFieldDecoration.copyWith(
+                                          hintText: 'Item Name'),
+                                  onChanged: (value) {
+                                    _addItemName = value;
+                                  },
+                                  controller: _itemNameEditingController,
+                                  textInputAction: TextInputAction.done,
+                                ),
+                              ),
+                              Flexible(
+                                flex: 1,
+                                child: TextField(
+                                  keyboardType: TextInputType.number,
+                                  decoration: _inputQuantityError
+                                      ? kErrorTextFieldDecoration.copyWith(
+                                          hintText: 'Invalid Quantity')
+                                      : kTextFieldDecoration.copyWith(
+                                          hintText: 'Quantity'),
+                                  onChanged: (value) {
+                                    if (isNumeric(value)) {
+                                      _addItemQuantity = int.parse(value);
+
+                                      setState(() {
+                                        _inputQuantityError = false;
+                                      });
+                                    } else {
+                                      setState(() {
+                                        _inputQuantityError = true;
+                                      });
+                                    }
+                                  },
+                                  controller: _itemQtyEditingController,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Flexible(
+                            flex: 1,
+                            child: TextField(
+                              controller: _itemStoreNameEditingController,
+                              decoration: kTextFieldDecoration.copyWith(
+                                  hintText: 'Store'),
+                              onChanged: (value) {
+                                _addItemStoreName = value;
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  Flexible(
-                    flex: 1,
-                    child: TextField(
-                      keyboardType: TextInputType.number,
-                      decoration: _inputQuantityError
-                          ? kErrorTextFieldDecoration.copyWith(
-                              hintText: 'Invalid Quantity')
-                          : kTextFieldDecoration.copyWith(hintText: 'Quantity'),
-                      onChanged: (value) {
-                        if (isNumeric(value)) {
-                          _addItemQuantity = int.parse(value);
-                          setState(() {
-                            _inputQuantityError = false;
-                          });
-                        } else {
-                          setState(() {
-                            _inputQuantityError = true;
-                          });
-                        }
-                      },
-                      controller: _itemQtyEditingController,
+                    Container(
+                      height: 100.0,
+                      child: RaisedButton(
+                        child: Icon(Icons.add),
+                        onPressed: () async {
+                          try {
+                            if ((_addItemName != null &&
+                                    _addItemName.length > 0) &&
+                                _addItemQuantity > 0) {
+                              setState(() {
+                                _inputNameError = false;
+
+                                _inputQuantityError = false;
+                              });
+
+                              print(_addItemName);
+
+                              bool addResult = await addShoppingListItem(
+                                itemName: _addItemName,
+                                quantity: _addItemQuantity,
+                                storeName: _addItemStoreName,
+                              );
+
+                              addResult
+                                  ? showSnackBarPantry(
+                                      context: context,
+                                      displayText:
+                                          'Added $_addItemName to Shopping List',
+                                    )
+                                  : showSnackBarPantry(
+                                      context: context,
+                                      displayText:
+                                          'Error adding $_addItemName to Shopping List',
+                                    );
+
+                              _itemNameEditingController.clear();
+
+                              _itemQtyEditingController.clear();
+
+                              _itemQtyEditingController.text = '1';
+
+                              _itemStoreNameEditingController.clear();
+
+                              _addItemName = '';
+
+                              _addItemQuantity = 1;
+
+                              _addItemStoreName = '';
+                            } else {
+                              setState(() {
+                                _inputNameError = true;
+
+                                _inputQuantityError = true;
+
+                                _itemQtyEditingController.clear();
+                              });
+                            }
+                          } catch (e) {
+                            print(e);
+                          }
+                        },
+                      ),
                     ),
-                  ),
-                  Flexible(
-                    flex: 1,
-                    child: TextField(
-                      controller: _itemStoreNameEditingController,
-                      decoration:
-                          kTextFieldDecoration.copyWith(hintText: 'Store'),
-                      onChanged: (value) {
-                        _addItemStoreName = value;
-                      },
-                    ),
-                  ),
-                  RaisedButton(
-                    child: Icon(Icons.add),
-                    onPressed: () async {
-                      try {
-                        if ((_addItemName != null && _addItemName.length > 0) &&
-                            _addItemQuantity > 0) {
-                          setState(() {
-                            _inputNameError = false;
-                            _inputQuantityError = false;
-                          });
-                          print(_addItemName);
-                          bool addResult = await addShoppingListItem(
-                            itemName: _addItemName,
-                            quantity: _addItemQuantity,
-                            storeName: _addItemStoreName,
-                          );
-                          addResult
-                              ? Scaffold.of(context).showSnackBar(
-                                  snackBarPantry(
-                                    title:
-                                        'Added $_addItemName to Shopping List',
-                                  ),
-                                )
-                              : Scaffold.of(context).showSnackBar(
-                                  snackBarPantry(
-                                    title:
-                                        'Error adding $_addItemName to Shopping List',
-                                  ),
-                                );
-                          _itemNameEditingController.clear();
-                          _itemQtyEditingController.clear();
-                          _itemQtyEditingController.text = '1';
-                          _itemStoreNameEditingController.clear();
-                          _addItemName = '';
-                          _addItemQuantity = 1;
-                          _addItemStoreName = '';
-                        } else {
-                          setState(() {
-                            _inputNameError = true;
-                            _inputQuantityError = true;
-                            _itemQtyEditingController.clear();
-                          });
-                        }
-                      } catch (e) {
-                        print(e);
-                      }
-                    },
-                  ),
-                ],
+                  ],
+                ),
               ),
               Expanded(
                 child: buildShoppingList(),

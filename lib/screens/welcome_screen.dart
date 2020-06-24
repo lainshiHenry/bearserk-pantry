@@ -1,5 +1,4 @@
 import 'package:bearserkpantry/dev/dev_data.dart';
-import 'package:bearserkpantry/screens/all_items.dart';
 import 'package:bearserkpantry/screens/shopping_list.dart';
 import 'package:bearserkpantry/services/auth_methods.dart';
 import 'package:bearserkpantry/utilities/constants.dart';
